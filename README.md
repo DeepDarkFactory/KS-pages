@@ -5,3 +5,14 @@
   <a href="https://www.npmjs.com/"><img src="https://img.shields.io/badge/npm-3.10.10-brightgreen.svg" /></a>
   <a href="https://github.com/Nbsaw/kotlin_spider/blob/master/LICENSE"><img src="https://img.shields.io/npm/l/vue.svg" alt="License"></a>
 </p>
+
+
+## Build 
+``` npm
+# install packages
+npm install 
+
+# build for webpack
+npm run build
+
+```
