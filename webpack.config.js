@@ -38,7 +38,11 @@ module.exports = {
 
         new webpack.LoaderOptionsPlugin({
             minimize: true
-        })
+        }),
+        new webpack.optimize.UglifyJsPlugin({
+
+        sourceMap: true,//这里的soucemap 不能少，可以在线上生成soucemap文件，便于调试
+    })
     ],
     resolve: {
         //简写扩展名
