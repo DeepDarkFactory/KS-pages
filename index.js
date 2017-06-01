@@ -13,14 +13,17 @@ let fill = d3.scale.category20();
 // Send a POST request 
 
 document.querySelector(".btn-primary").onclick=function(){
-  request()
+  request(document.querySelector('.text-input').value)
 }
-let request=function () {
+
+document.querySelectorAll(".singer-name").forEach(ele=>ele.onclick=function(){request(ele.innerHTML)})
+
+let request=function (val) {
   axios({
     method: 'get',
     url: 'http://112.74.111.33:3000/163',
     params: {
-      name: document.querySelector('.text-input').value
+      name: val
     }
   }).then(d => reset(d.data))
     .catch(()=>alert("没有此歌手"));
@@ -32,7 +35,7 @@ let request=function () {
     document.querySelectorAll('.svg-contain')[0].innerHTML = '';
     cloud().size([950, 550])
       .words(word.slice(0, Math.min(word.length, 250)).map(function (d, i) {
-        return { text: d.key, size: d3.scale["log"]().range([10, 45])(d.value) };
+        return { text: d.key, size: d3.scale["log"]().range([10, 30])(d.value) };
       }))
       .padding(5)
       .rotate(function () { return (~~(Math.random() * 6) - 3) * 30; })
