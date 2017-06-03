@@ -15,22 +15,22 @@ var fill = d3.scale.category20();
 // // Send a POST request 
 
 
-// document.querySelector(".btn-primary").onclick = function () {
-//   request(document.querySelector('.text-input').value)
-// }
+document.querySelector(".btn-primary").onclick = function () {
+  request(document.querySelector('.text-input').value)
+}
 
-// document.querySelectorAll(".singer-name").forEach(ele => ele.onclick = function () { request(ele.innerHTML) })
+document.querySelectorAll(".singer-name").forEach(ele => ele.onclick = function () { request(ele.innerHTML) })
 
-// let request = function (val) {
-//   axios({
-//     method: 'get',
-//     url: 'http://112.74.111.33:3000/163',
-//     params: {
-//       name: val
-//     }
-//   }).then(d => {window.a=draw(word)})
-//     .catch(() => alert("没有此歌手"));
-// }
+let request = function (val) {
+  axios({
+    method: 'get',
+    url: 'http://112.74.111.33:3000/163',
+    params: {
+      name: val
+    }
+  }).then(d => {document.querySelector(".svg-contain").innerHTML='';showNewWords(myWordCloud(d.data))})
+    .catch(() => alert("没有此歌手"));
+}
 
 // let reset = function (word) {
 //   // nprogress.start();
@@ -121,7 +121,7 @@ var fill = d3.scale.category20();
 //---------------------------------------------------------------------------------------------------------------------------------
 
 
-function wordCloud(selector) {
+function wordCloud(selector,words) {
 
 
     var fill = d3.scale.category20();
@@ -129,11 +129,11 @@ function wordCloud(selector) {
 
     //Construct the word cloud's SVG element
     var svg = d3.select(selector).append("svg")
-        .attr("width", 500)
+        .attr("width", 900)
         .attr("height", 500)
-        .attr("transform", "translate(250,50)")
+        .attr("transform", "translate(50,50)")
         .append("g")
-        .attr("transform", "translate(250,250)");
+        .attr("transform", "translate(450,250)");
 
 
 
@@ -185,7 +185,7 @@ function wordCloud(selector) {
         //The outside world will need to call this function, so make it part
         // of the wordCloud return value.
         update: function(words) {
-            cloud().size([500, 500])
+            cloud().size([800, 500])
                 .words(words)
                 .padding(5)
                 .rotate(function () { return (~~(Math.random() * 6) - 3) * 30; })
@@ -221,15 +221,16 @@ function showNewWords(vis, i) {
     i = i || 0;
 
 
-    vis.update(getWords(i ++ % words.length))
+    vis.update(getWords(i ++ % word.length))
     //setTimeout(function() { showNewWords(vis, i + 1)}, 2000)
 }
 
 
 //Create a new instance of the word cloud visualisation.
-var myWordCloud = wordCloud('.svg-contain');
-
+function myWordCloud(word){
+    return wordCloud('.svg-contain',word);
+}
 
 //Start cycling through the demo data
-showNewWords(myWordCloud);
+
 
