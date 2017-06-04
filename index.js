@@ -1,7 +1,7 @@
 import './src/css/index.css';
 // import 'nprogress/nprogress.css'
 import 'normalize.css';
-
+import 'pure-css-loader/dist/css-loader.css'
 
 // import nprogress from "nprogress";
 import d3 from "./src/js/d3.min.js"
@@ -10,6 +10,9 @@ import cloud from "d3-cloud";
 import { word } from "./src/js/arr.js"
 import axios from "axios"
 var fill = d3.scale.category20();
+var loader=d3.select('.loader');     //css loader
+var msg=['服务器君tm射爆卡 (╯‵□′)╯︵┻━┻','你快回来，把我的数据还回来(⊙ˍ⊙)','假猪套天下第一 🐷','把他娘的意大利....面拿出来 ?ω?','我反正就是一个....小心心你要吗💗']
+
 // window.word=word
 
 // // Send a POST request 
@@ -22,14 +25,16 @@ document.querySelector(".btn-primary").onclick = function () {
 document.querySelectorAll(".singer-name").forEach(ele => ele.onclick = function () { request(ele.innerHTML) })
 
 let request = function (val) {
+  loader.classed('is-active', true)
+  .attr('data-curtain-text',msg[Math.floor(msg.length*Math.random())])
   axios({
     method: 'get',
     url: 'http://112.74.111.33:3000/163',
     params: {
       name: val
     }
-  }).then(d => {document.querySelector(".svg-contain").innerHTML='';showNewWords(myWordCloud(d.data))})
-    .catch(() => alert("没有此歌手"));
+  }).then(d => {document.querySelector(".svg-contain").innerHTML='';showNewWords(myWordCloud(d.data));loader.classed('is-active', ()=>false)})
+    .catch(() => {loader.classed('is-active', ()=>false);alert("没有此歌手")});
 }
 
 // let reset = function (word) {
@@ -129,11 +134,11 @@ function wordCloud(selector,words) {
 
     //Construct the word cloud's SVG element
     var svg = d3.select(selector).append("svg")
-        .attr("width", 900)
+        .attr("width", 960)
         .attr("height", 500)
-        .attr("transform", "translate(50,50)")
+        .attr("transform", "translate(0,50)")
         .append("g")
-        .attr("transform", "translate(450,250)");
+        .attr("transform", "translate(480,250)");
 
 
 
@@ -149,14 +154,15 @@ function wordCloud(selector,words) {
             .style("fill", function(d, i) { return fill(i); })
             .attr("text-anchor", "middle")
             .attr('font-size', 1)
-            .text(function(d) { return d.text; });
+            .text(function(d) { return d.text; })
+            
 
 
         //Entering and existing words
-        cloud
-            .transition()
+        cloud.transition()
                 .duration(600)
                 .style("font-size", function(d) { return d.size + "px"; })
+                .attr("transform", "transform: translate(0,0)")
                 .attr("transform", function(d) {
                     return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
                 })
@@ -185,7 +191,7 @@ function wordCloud(selector,words) {
         //The outside world will need to call this function, so make it part
         // of the wordCloud return value.
         update: function(words) {
-            cloud().size([800, 500])
+            cloud().size([960, 500])
                 .words(words)
                 .padding(5)
                 .rotate(function () { return (~~(Math.random() * 6) - 3) * 30; })
@@ -209,7 +215,7 @@ function getWords(i) {
   //           .replace(/[!\.,:;\?]/g, '')
   //           .split(' ')
     return word.map(function(d) {
-                return {text: d.key, size: 10 + Math.random() * 60};
+                return {text: d.key, size:d3.scale["log"]().range([10, 30])(d.value)};
             })
 }
 
