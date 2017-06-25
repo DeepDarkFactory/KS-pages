@@ -1,4 +1,3 @@
-import './src/css/index.css';                               //主要样式表
 import 'normalize.css';                                     //css reset
 import 'pure-css-loader/dist/css-loader.css'                //css-loading 样式
 
@@ -22,6 +21,12 @@ var svg = d3.select('.svg-contain').append("svg")
 
 
 
+document.querySelector('.text-input').onkeydown = function (e) {
+
+    if (e.keyCode == 13) {
+        request(this.value)
+    }
+}
 
 document.querySelector(".btn-primary").onclick = function () {
     request(document.querySelector('.text-input').value)
@@ -41,14 +46,14 @@ let request = function (val) {
     loader.classed('is-active', true)
         .attr('data-curtain-text', msg[Math.floor(msg.length * Math.random())])
     axios({
-            method: 'get',
-            url: 'https://kspider.nbsaw.com/163',
-            params: {
-                name: val
-            }
-        }).then(d => {
-            showNewWords(wordCloud(), d.data);
-        })
+        method: 'get',
+        url: 'https://kspider.nbsaw.com/163',
+        params: {
+            name: val
+        }
+    }).then(d => {
+        showNewWords(wordCloud(), d.data);
+    })
         .catch(() => {
             loader.classed('is-active', () => false);
             alert("没有此歌手")
@@ -104,12 +109,12 @@ function wordCloud(selector) {
             .remove();
     }
 
-                
-            
+
+
     return {
-        
+
         update: function (words) {
-           cloud().size([960, 500])
+            cloud().size([960, 500])
                 .words(words)
                 .padding(5)
                 .rotate(function () {
@@ -122,7 +127,7 @@ function wordCloud(selector) {
                 .on("end", draw)
                 .start();
 
-                loader.classed('is-active', () => false);
+            loader.classed('is-active', () => false);
         }
     }
 
@@ -131,7 +136,7 @@ function wordCloud(selector) {
 
 function showNewWords(vis, word) {
 
-    vis.update(word.slice(0,Math.min(200,word.length)).map(function (d) {
+    vis.update(word.slice(0, Math.min(200, word.length)).map(function (d) {
         return {
             text: d.key,
             size: d3.scale["log"]().range([10, 30])(d.value)
