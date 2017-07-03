@@ -1717,6 +1717,12 @@ var svg = __WEBPACK_IMPORTED_MODULE_2__src_js_d3_min_js___default.a.select('.svg
     .append("g")
     .attr("transform", "translate(480,250)");
 
+document.querySelector('.text-input').onkeydown = function (e) {
+
+    if (e.keyCode == 13) {
+        request(this.value)
+    }
+}
 
 
 
